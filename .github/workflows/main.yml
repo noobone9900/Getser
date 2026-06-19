@@ -1,0 +1,37 @@
+name: Deploy APK Site
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Create website
+        run: |
+          mkdir public
+          
+          echo "<html><body>" > public/index.html
+          echo "<h1>APK Download</h1>" >> public/index.html
+          echo "<a href='app.apk'>Download APK</a>" >> public/index.html
+          echo "</body></html>" >> public/index.html
+
+      - name: Copy APK
+        run: cp app.apk public/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy
+        uses: actions/deploy-pages@v4
